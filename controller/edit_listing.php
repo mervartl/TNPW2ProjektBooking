@@ -9,17 +9,17 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$offerId = $_GET['id'] ?? null;
-if (!$offerId) {
+$listingId = $_GET['id'] ?? null;
+if (!$listingId) {
     $_SESSION['message'] = 'Neplatné ID inzerátu.';
     header('Location: ../controller/home.php');
     exit;
 }
 
-$offer = getOfferById($pdo, $offerId);
+$listing = getListingById($pdo, $listingId);
 
 // Ověříme, že inzerát patří přihlášenému uživateli
-if (!$offer || $offer['user_id'] !== $_SESSION['user_id']) {
+if (!$listing || $listing['user_id'] !== $_SESSION['user_id']) {
     $_SESSION['message'] = 'Nemáte oprávnění upravit tento inzerát.';
     header('Location: ../controller/home.php');
     exit;
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $location = $_POST['location'] ?? '';
-    $imagePath = $offer['image_path'];
+    $imagePath = $listing['image_path'];
 
     // Zpracování nového obrázku
     if (!empty($_FILES['image']['tmp_name'])) {
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    updateOffer($pdo, $offerId, $title, $description, $location, $imagePath);
+    updateListing($pdo, $listingId, $title, $description, $location, $imagePath);
 
     $_SESSION['message'] = 'Inzerát byl úspěšně upraven.';
     header("Location: home.php");

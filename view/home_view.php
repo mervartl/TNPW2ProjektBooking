@@ -8,11 +8,12 @@
 </head>
 
 <body>
-    <script src="../public/js/favourites.js" defer></script>
+    <script src="../public/js/favourites.js" defer></script> <!-- Skript pro oblíbené inzeráty (ukládání v browseru) -->
     <?php include '../partials/header.php'; ?>
 
     <div class="container mt-4">
 
+        <!-- Zobrazení zprávy, pokud existuje -->
         <?php if (!empty($_SESSION['message'])): ?>
             <div class="alert alert-success">
                 <?= htmlspecialchars($_SESSION['message']) ?>
@@ -22,12 +23,14 @@
 
         <h1 class="mb-4">Vítej, <?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']) : 'návštěvníku' ?> 👋</h1>
 
+        <!-- Formulář pro filtrování inzerátů -->
         <form method="GET" action="home.php" class="mb-4 row g-3 align-items-center">
             <div class="col-sm-6 col-md-4">
                 <input type="text" class="form-control" name="q" placeholder="Hledat inzeráty..." value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
             </div>
             <div class="col-auto">
                 <?php if (isset($_SESSION['user'])): ?>
+                <!-- Checkbox pro zobrazení pouze vlastních inzerátů -->
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="showOwn" value="1" id="showOwn" <?= isset($showOwn) && $showOwn ? 'checked' : '' ?>>
                     <label class="form-check-label" for="showOwn">
@@ -41,6 +44,7 @@
             </div>
         </form>
 
+        <!-- Checkbox pro zobrazení pouze oblíbených inzerátů -->
         <div class="form-check mb-4">
             <input class="form-check-input" type="checkbox" id="show-favourites-only">
             <label class="form-check-label" for="show-favourites-only">
@@ -50,14 +54,16 @@
 
         <h2><?= $showOwn ? 'Moje inzeráty' : 'Všechny inzeráty' ?></h2>
 
-        <?php if (empty($offers)): ?>
+        <!-- Zobrazení inzerátů nebo zpráva, pokud nejsou žádné -->
+        <?php if (empty($listings)): ?>
             <p class="text-muted">Žádné inzeráty k zobrazení.</p>
         <?php else: ?>
-            <?php foreach ($offers as $offer): ?>
-                <?php include '../view/components/listing_card.php'; ?>
+            <?php foreach ($listings as $listing): ?>
+                <?php include '../view/components/listing_card.php'; ?> <!-- Zobrazení karty inzerátu -->
             <?php endforeach; ?>
         <?php endif; ?>
 
+        <!-- Navigace pro stránkování -->
         <nav class="mt-4">
             <ul class="pagination">
                 <?php if ($page > 1): ?>

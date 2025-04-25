@@ -11,12 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $id = $_POST['id'];
 
     // Zkontroluj, že inzerát patří přihlášenému uživateli
-    $stmt = $pdo->prepare("SELECT * FROM offers WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM listings WHERE id = ?");
     $stmt->execute([$id]);
-    $offer = $stmt->fetch();
+    $listing = $stmt->fetch();
 
-    if ($offer && $offer['user_id'] == $_SESSION['user_id']) {
-        $stmt = $pdo->prepare("DELETE FROM offers WHERE id = ?");
+    if ($listing && $listing['user_id'] == $_SESSION['user_id']) {
+        $stmt = $pdo->prepare("DELETE FROM listings WHERE id = ?");
         $stmt->execute([$id]);
         $_SESSION['message'] = "Inzerát byl úspěšně smazán.";
     } else {

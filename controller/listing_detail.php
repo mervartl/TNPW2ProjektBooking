@@ -4,21 +4,21 @@ require_once '../database/connect_db.php';
 require_once '../model/listing.php';
 require_once '../model/comment.php';
 
-$offerId = $_GET['id'] ?? null;
-if (!$offerId) {
+$listingId = $_GET['id'] ?? null;
+if (!$listingId) {
     header("Location: home.php");
     exit;
 }
 
-$offer = getOfferById($pdo, $offerId);
-$comments = getCommentsForOffer($pdo, $offerId);
+$listing = getListingById($pdo, $listingId);
+$comments = getCommentsForListing($pdo, $listingId);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
     if (isset($_POST['comment'])) {
         // Přidání nového komentáře
         $content = trim($_POST['comment']);
         if ($content) {
-            addComment($pdo, $offerId, $_SESSION['user_id'], $content);
+            addComment($pdo, $listingId, $_SESSION['user_id'], $content);
         }
     } elseif (isset($_POST['delete_comment_id'])) {
         // Mazání komentáře
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
     }
 
     // Obnovení stránky (bez opakovaného odeslání formuláře)
-    header("Location: listing_detail.php?id=$offerId");
+    header("Location: listing_detail.php?id=$listingId");
     exit;
 }
 

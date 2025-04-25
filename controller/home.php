@@ -14,16 +14,14 @@ $offset = ($page - 1) * $itemsPerPage;
 
 // Načtení inzerátů podle filtru + stránkování
 if ($showOwn && isset($_SESSION['user_id'])) {
-    $offers = searchUserOffersPaged($pdo, $_SESSION['user_id'], $query, $itemsPerPage, $offset);
-    $totalOffers = countUserOffers($pdo, $_SESSION['user_id'], $query);
+    $listings = searchUserListingsPaged($pdo, $_SESSION['user_id'], $query, $itemsPerPage, $offset);
+    $totalListings = countUserListings($pdo, $_SESSION['user_id'], $query);
 } else {
-    $offers = searchAllOffersPaged($pdo, $query, $itemsPerPage, $offset);
-    $totalOffers = countAllOffers($pdo, $query);
+    $listings = searchAllListingsPaged($pdo, $query, $itemsPerPage, $offset);
+    $totalListings = countAllListings($pdo, $query);
 }
 
-$totalPages = ceil($totalOffers / $itemsPerPage);
+$totalPages = ceil($totalListings / $itemsPerPage);
 
-// Načtení view
 include '../view/home_view.php';
-
 ?>

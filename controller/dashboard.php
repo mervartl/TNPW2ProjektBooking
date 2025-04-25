@@ -14,13 +14,13 @@ $userId = $_SESSION['user_id'];
 $userName = $_SESSION['user_name'] ?? '';
 
 // Načítání všech inzerátů uživatele
-$userOffers = searchUserOffers($pdo, $userId);
+$userListings = searchUserListings($pdo, $userId);
 
 // Pokud byla odeslána žádost o smazání inzerátů
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_offers'])) {
-    if (isset($_POST['offer_ids'])) {
-        foreach ($_POST['offer_ids'] as $offerId) {
-            deleteOffer($pdo, $offerId);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_listings'])) {
+    if (isset($_POST['listing_ids'])) {
+        foreach ($_POST['listing_ids'] as $listingrId) {
+            deleteListing($pdo, $listingId);
         }
     }
     header('Location: dashboard.php');

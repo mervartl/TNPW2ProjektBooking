@@ -18,6 +18,7 @@ session_start();
         <h2 class="text-center mb-4">Registrace</h2>
 
         <?php if (!empty($_SESSION['register_error'])): ?>
+            <!-- Zobrazení chybové zprávy, pokud nějaká existuje -->
             <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['register_error']) ?></div>
             <?php unset($_SESSION['register_error']); ?>
         <?php endif; ?>

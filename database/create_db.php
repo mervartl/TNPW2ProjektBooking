@@ -9,7 +9,7 @@ $pdo = new PDO("sqlite:$dbPath");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Smažeme tabulky, pokud existují
-$pdo->exec("DROP TABLE IF EXISTS offers;");
+$pdo->exec("DROP TABLE IF EXISTS listings;");
 $pdo->exec("DROP TABLE IF EXISTS users;");
 $pdo->exec("DROP TABLE IF EXISTS comments;");
 
@@ -22,7 +22,7 @@ CREATE TABLE users (
     password TEXT NOT NULL
 );
 
-CREATE TABLE offers (
+CREATE TABLE listings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     title TEXT NOT NULL,
@@ -35,11 +35,11 @@ CREATE TABLE offers (
 
 CREATE TABLE comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    offer_id INTEGER NOT NULL,
+    listing_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     content TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (offer_id) REFERENCES offers(id),
+    FOREIGN KEY (listing_id) REFERENCES listings(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -57,21 +57,21 @@ $pdo->exec("INSERT INTO users (name, email, password) VALUES
 // Naplníme testovacími daty
 $userId = $pdo->lastInsertId();
 
-$stmt = $pdo->prepare("INSERT INTO offers (user_id, title, description, location, image_path, created_at) VALUES 
+$stmt = $pdo->prepare("INSERT INTO listings (user_id, title, description, location, image_path, created_at) VALUES 
     (?, ?, ?, ?, ?, ?)");
 $stmt->execute([1, 'Sedmdesátky', 'Šumperák', 'Jaroměř', 'uploads/sumperak.jpg', date('Y-m-d H:i:s')]);
 
-$pdo->exec("INSERT INTO comments (offer_id, user_id, content) VALUES 
+$pdo->exec("INSERT INTO comments (listing_id, user_id, content) VALUES 
     (1, 2, 'Kdy je možné se ubytovat?');");
 
-$offers = [
+$listings = [
     ['Chalupa v Krkonoších', 'Ubytování s výhledem na Sněžku', 'Pec pod Sněžkou', 'uploads/cottage.jpeg'],
     ['Apartmán v Praze', 'Centrum města, 2+kk', 'Praha', 'uploads/apartment.jpg'],
     ['Chatka u jezera', 'Romantika u vody', 'Lipno', 'uploads/lakehouse.jpg'],
 ];
 
-foreach ($offers as $o) {
-    $stmt = $pdo->prepare("INSERT INTO offers (user_id, title, description, location, image_path, created_at)
+foreach ($listings as $o) {
+    $stmt = $pdo->prepare("INSERT INTO listings (user_id, title, description, location, image_path, created_at)
                            VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->execute([$userId, $o[0], $o[1], $o[2], $o[3], date('Y-m-d H:i:s')]);
 }
